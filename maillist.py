@@ -18,12 +18,13 @@ class MailList():
     def count(self):
         return len(self.subscribers)
 
+#return a tuple with name and email if email in list of subscribers
     def get_subscriber_by_email(self, email):
         if email in self.subscribers:
             return (self.subscribers[email], email)
 
         return None
-
+#subscribers returned in a list of tuples
     def get_subscribers(self):
         result = []
         for email in self.subscribers:

@@ -55,8 +55,7 @@ class MailListProgram():
         sys.exit(0)
 
     def _load_initial_state(self):
-        dir_lists = map(basename, glob(self.db_path + "*"))
-
+        dir_lists = map(basename(), glob(self.db_path + "*"))
         for list_file in dir_lists:
             adapter = MailListFileAdapter(self.db_path)
             parsed_list = adapter.load(list_file)

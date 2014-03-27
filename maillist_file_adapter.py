@@ -18,7 +18,7 @@ class MailListFileAdapter():
     # (name, email) -> "<name> - <email>"
     def prepare_for_save(self):
         subscribers = self.mail_list.get_subscribers()
-        subscribers = map(lambda t: "{} - {}".format(t[0], t[1]), subscribers)
+        subscribers = list(map(lambda t: "{} - {}".format(t[0], t[1]), subscribers))
 
         return sorted(subscribers)
 
@@ -46,10 +46,10 @@ class MailListFileAdapter():
         lines.pop(0)
 
         result = MailList(maillist_id, maillist_name)
-
         for unparsed_subscriber in lines:
-            subscriber = unparsed_subscriber.split(" - ")
-            result.add_subscriber(subscriber[0], subscriber[1])
+            if len(unparsed_subscriber) > 0:
+                subscriber = unparsed_subscriber.split(" - ")
+                result.add_subscriber(subscriber[0], subscriber[1])
 
         return result
 
