@@ -1,15 +1,17 @@
+from subscriber import Subscriber
+
+
 class MailList():
     """docstring for MailList"""
-    def __init__(self, list_id, name):
+    def __init__(self, name):
         self.__name = name
-        self.__id = list_id
-        self.subscribers = {}
+        self.subscribers = []
 
-    def add_subscriber(self, name, email):
-        if email in self.subscribers:
+    def add_subscriber(self, subscriber):
+        emails = [member.get_email() for member in self.subscribers]
+        if subscriber.get_email() in emails:
             return False
-
-        self.subscribers[email] = name
+        self.subscribers.append(subscriber)
         return True
 
     def get_name(self):
@@ -18,34 +20,34 @@ class MailList():
     def count(self):
         return len(self.subscribers)
 
-#return a tuple with name and email if email in list of subscribers
     def get_subscriber_by_email(self, email):
-        if email in self.subscribers:
-            return (self.subscribers[email], email)
+        for subscriber in self.subscribers:
+            if subscriber.get_email() == email:
+                return subscriber
 
         return None
-#subscribers returned in a list of tuples
+
+#returns tuple (name, email)
     def get_subscribers(self):
-        result = []
-        for email in self.subscribers:
-            result.append((self.subscribers[email], email))
-        return result
+        subscribers = []
+        for subscriber in self.subscribers:
+            subscribers.append((subscriber.get_name(), subscriber.get_email()))
+        return subscribers
+
 
     def update_subscriber(self, email, update_hash):
-        if "email" in update_hash:
-            name = self.subscribers[email]
-            self.subscribers[update_hash["email"]] = name
-            del self.subscribers[email]
-            email = update_hash["email"]
-
-        if "name" in update_hash:
-            self.subscribers[email] = update_hash["name"]
+        for subscriber in self.subscribers:
+            if subscriber.get_email() == email:
+                if "email" in update_hash:
+                    new_email = update_hash["email"]
+                    subscriber.change_email(new_email)
+                if "name" in update_hash:
+                    new_name = update_hash["name"]
+                    subscriber.change_name(new_name)
 
     def remove_subscriber(self, email):
-        if email in self.subscribers:
-            del self.subscribers[email]
-
+        for subscriber in self.subscribers:
+            if subscriber.get_email() == email:
+                self.subscribers.remove(subscriber)
+                break
         return None
-
-    def get_id(self):
-        return self.__id
